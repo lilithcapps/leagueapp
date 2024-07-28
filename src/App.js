@@ -131,8 +131,6 @@ function StoreMap({ podNames, round, setPlayerScores }) {
 
 function PlayerNames({ names, handleDelete, judgeNames, setJudgeNames, setPage, setAccess, setSwitch }) {
 
-  //TODO Make sure pods are generated after adding new players
-
   function handleRightClick(e, judgeName) {
     e.preventDefault()
     setJudgeNames(judgeNames.filter((item) => item !== judgeName))
@@ -406,6 +404,7 @@ function AccessibilityPanel({ access, setAccess, switchStates, setSwitchStates }
 }
 
 function App() {
+  // TODO add spreadsheet integration (??)
   const [playerNames, setPlayerNames] = useState(
     ["James K", "Matthew M", "Dan C", "Cat R", "Aidan C", "Deg U", 
       "Liam M", "Cam C", "Rachael D", "Ezra P", "Will S", "Serena C", 
@@ -609,10 +608,11 @@ function App() {
           } else if (item[1].includes(originalSeat)) {
             usedSeats.push(originalSeat)
           }
-        } else if (!alerted && idx+1 === arr.length) {
-          alerted = true
-          alert("1 or more players could not be seated at a preferred table.\nPlease ensure that all pods are acceptable")
-        }
+        } // TODO fix alerts so it fires consistently and at the right time
+        // else if (!alerted && idx+1 === arr.length) {
+        //   alerted = true
+        //   alert("1 or more players could not be seated at a preferred table.\nPlease ensure that all pods are acceptable")
+        // }
       })
     })
 
@@ -769,6 +769,7 @@ function App() {
               </Container>
             </Tab.Pane>
             <Tab.Pane eventKey="fourth">
+              {/* TODO add export to google sheets (something in that vein) */}
               <PlayerScores scoresArray={playerScores}/>
             </Tab.Pane>
             <Tab.Pane eventKey="accessibility">
