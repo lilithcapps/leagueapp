@@ -77,6 +77,7 @@ function StoreMap({ podNames, round, setPlayerScores }) {
     <>
     <Form.Control className='mb-4' type='text' size='lg' placeholder='Back of Store' tabIndex={-1} readOnly style={{textAlign: 'center', cursor: 'default'}}/>
     <Container>
+    {/* TODO get priority of tables from google sheets */}
       <Row>
         <Col className="column curve-left">
           <PodTable tableNames={podNames[6]} round={round} setScores={(score, playerNum) => setProxy(score, playerNum, 6)}/>
@@ -260,6 +261,8 @@ function AccessibilityPanel({ access, setAccess, switchStates, setSwitchStates }
   //                7 2   3 5
   //               11 8   9 10
 
+  // TODO get priority of tables from google sheets
+
   const aisle = [0, 1, 2, 3, 8, 9]
   const wall = [4, 5, 6, 7, 10, 11]
   const front = [8, 9, 10, 11]
@@ -287,6 +290,8 @@ function AccessibilityPanel({ access, setAccess, switchStates, setSwitchStates }
       e.target.right.checked ? right : null
     ].filter((item) => item !== null)
 
+
+    // TODO add to sheet
     if (restrictions.length === 1) {
       setAccess(access.toSpliced(e.target.id, 1, [name, restrictions[0]]))
     } else if (restrictions.length === 0 ) {
@@ -304,6 +309,7 @@ function AccessibilityPanel({ access, setAccess, switchStates, setSwitchStates }
     }
   }
 
+  // TODO remove from sheet
   function handleDelete(name) {
     setAccess(access.filter((item) => item[0] !== name))
   }
@@ -404,7 +410,7 @@ function AccessibilityPanel({ access, setAccess, switchStates, setSwitchStates }
 }
 
 function App() {
-  // TODO add spreadsheet integration (??)
+  // TODO add spreadsheet integration (??) [names from google sheets]
   const [playerNames, setPlayerNames] = useState(
     ["James K", "Matthew M", "Dan C", "Cat R", "Aidan C", "Deg U", 
       "Liam M", "Cam C", "Rachael D", "Ezra P", "Will S", "Serena C", 
@@ -415,6 +421,8 @@ function App() {
       "Dan L", "Lilith E", "Oliver G", "Andrew M", "Jacob L", "Andrew H", 
       "Mark D", "Jack H", "Rowan K", "Barry H", "Marcy R", "Jamie T", "Sindre V"].sort())
   const [judgeNames, setJudgeNames] = useState(["Cat R", "Ezra P", "Lilith L"])
+  // TODO get priority of tables from google sheets
+  // TODO get access from sheets
   const [access, setAccess] = useState([["Head Judge", [0]], ["Liam M", [0, 1, 2, 3, 8, 9]]])
   const [bulkInput, setBulkInput] = useState(false)
   const [key, setKey] = useState('first');
@@ -427,6 +435,7 @@ function App() {
 
   function parseArray(array) {
 
+    // TODO get priority of tables from google sheets
     const aisle = [0, 1, 2, 3, 8, 9]
     const wall = [4, 5, 6, 7, 10, 11]
     const front = [8, 9, 10, 11]
@@ -742,6 +751,9 @@ function App() {
                       Shuffle Pods
                     </Button>
                   </Col>
+                  <Col> </Col>
+                  <Col sm={1}> </Col>
+                  <Col> </Col>
                   <Col>
                     <Button size='lg' variant='success' onClick={handleSubmitRound1}>
                       Submit Scores
@@ -755,12 +767,15 @@ function App() {
                 <StoreMap podNames={round2Players} round={2} setPlayerScores={setRound2Players}/>
                 <br />
                 <Row>
-                  <Col xs={3}>
+                  <Col>
                     <Button size='lg' variant='warning' onClick={() => setRound2Players(generateRound2Pods())}>
                       Regenerate Pods
                     </Button>
                   </Col>
-                  <Col xs={3}>
+                  <Col> </Col>
+                  <Col sm={1}> </Col>
+                  <Col> </Col>
+                  <Col>
                     <Button size='lg' variant='success' onClick={handleSubmitRound2}>
                       Submit Scores
                     </Button>
