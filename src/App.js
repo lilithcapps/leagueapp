@@ -357,7 +357,7 @@ function PlayerNames({
             setSwitch();
             setPage();
           }}
-          onTouchEnd={(e) => {
+          onTouchStart={(e) => {
             setAccess(e.triggerEvent.originalTarget.outerText);
             setSwitch();
             setPage();
@@ -365,7 +365,7 @@ function PlayerNames({
         >
           Set accessibility needs
         </Item>
-        <Item id='judge' onClick={handleClick} onTouchEnd={handleClick}>
+        <Item id='judge' onClick={handleClick} onTouchStart={handleClick}>
           Set as judge
         </Item>
       </Menu>
