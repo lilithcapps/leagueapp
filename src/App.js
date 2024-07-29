@@ -492,6 +492,7 @@ function AccessibilityPanel({
               <Form id={i} onSubmit={(e) => handleSubmit(e, item[0])}>
                 <Row>
                   <Col>
+                  {/* TODO make switches into radios: use second spliced to change whole group, e.g. below  */}
                     <Row>
                       <label>
                         <Form.Switch
@@ -504,8 +505,8 @@ function AccessibilityPanel({
                                 1,
                                 switchStates[i].toSpliced(
                                   0,
-                                  1,
-                                  !switchStates[i][0]
+                                  2,
+                                  [!switchStates[i][0], false]
                                 )
                               )
                             )
@@ -526,9 +527,9 @@ function AccessibilityPanel({
                                 i,
                                 1,
                                 switchStates[i].toSpliced(
-                                  1,
-                                  1,
-                                  !switchStates[i][1]
+                                  0,
+                                  2,
+                                  [false, !switchStates[i][1]]
                                 )
                               )
                             )
@@ -767,55 +768,45 @@ function App() {
   // TODO add spreadsheet integration (??) [names from google sheets]
   const [playerNames, setPlayerNames] = useState(
     [
-      'James K',
-      'Matthew M',
-      'Dan C',
-      'Cat R',
-      'Aidan C',
-      'Deg U',
-      'Liam M',
-      'Cam C',
-      'Rachael D',
       'Ezra P',
-      'Will S',
-      'Serena C',
-      'Zane U',
-      'Darren M',
+      'Aidan C',
       'David A',
-      'Jeff S',
-      'Martin K',
-      'Sam C',
-      'Ethan L',
-      'Leo A',
-      'Matt L',
-      'Rob L',
-      'James W',
-      'Lilith L',
-      'Luke H',
-      'Kai D',
-      'Joel S',
-      'Steph K',
-      'Alex L',
-      'Dom H',
-      'Aaron H',
-      'Donnie S',
-      'Anton A',
-      'Elliot H',
-      'Tom B',
-      'Vincent M',
-      'Dan L',
-      'Lilith E',
-      'Oliver G',
-      'Andrew M',
-      'Jacob L',
+      'Rachael D',
+      'Liam M',
+      'Adam Cunningham',
+      'Cam C',
       'Andrew H',
-      'Mark D',
-      'Jack H',
-      'Rowan K',
+      'Matt L',
+      'James K',
+      'Shaun M',
+      'Dan C',
+      'Will S',
+      'Cat R',
+      'Oliver G',
+      'Zane U',
+      'Botond H',
+      'Dan L',
+      'Matthew M',
+      'Darren M',
+      'James S',
+      'Alex B',
+      'Ethan L',
+      'Jeff S',
+      'John C',
+      'Lilith C',
+      'Deg U',
+      'Adam Crayford',
+      'Martin K',
       'Barry H',
-      'Marcy R',
-      'Jamie T',
-      'Sindre V',
+      'Rob L',
+      'Serena C',
+      'Dom H',
+      'Phil B',
+      'Tom M',
+      'Leo A',
+      'James C',
+      'Adam J',
+      'Sam C'
     ].sort()
   );
   const [judgeNames, setJudgeNames] = useState(['Cat R', 'Ezra P', 'Lilith L']);
