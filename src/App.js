@@ -839,9 +839,15 @@ function App() {
     )
       .then((r) => r.json())
       .then((r) => {
+        console.log(r)
         setPlayerNames(r.names);
         setAccess(r.access);
         setTableOrder(r.tables);
+        const scores = r.names.map((name) => [name, 0, 0])
+        setPlayerScores(scores);
+        setRound1Players(shuffle(scores))
+        setRound2Players(shuffle(scores))
+        setSwitchStates(r.access.map((item) => parseArray(item[1])))
       });
   }, []);
 
@@ -1145,10 +1151,12 @@ function App() {
             setRound2Players(generateRound2Pods());
             break;
           case 'fourth':
+            console.log(round1Players)
             const round1PlayersFlat = round1Players
               .flat()
               .filter((item) => playerNames.includes(item[0]))
               .sort();
+            console.log(round2Players)
             const round2PlayersFlat = round2Players
               .flat()
               .filter((item) => playerNames.includes(item[0]))
