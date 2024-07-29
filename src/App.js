@@ -746,13 +746,13 @@ function App() {
                 <StoreMap podNames={round1Players} round={1} setPlayerScores={setRound1Players}/>
                 <br />
                 <Row>
-                  <Col className='d-grid pods-button-left'>
+                  <Col className='pods-button-left d-grid'>
                     <Button size='lg' variant='warning' onClick={() => {setRound1Players(shuffle(playerScores.slice()))}}>
                       Shuffle Pods
                     </Button>
                   </Col>
-                  <Col md={1}> </Col>
-                  <Col className='d-grid pods-button-right'>
+                  <Col lg={1}> </Col>
+                  <Col className='pods-button-right d-grid'>
                     <Button size='lg' variant='success' onClick={handleSubmitRound1}>
                       Submit Scores
                     </Button>
@@ -765,13 +765,13 @@ function App() {
                 <StoreMap podNames={round2Players} round={2} setPlayerScores={setRound2Players}/>
                 <br />
                 <Row>
-                  <Col className='d-grid pods-button-left'>
+                  <Col className='pods-button-left d-grid'>
                     <Button size='lg' variant='warning' onClick={() => setRound2Players(generateRound2Pods())}>
                       Regenerate Pods
                     </Button>
                   </Col>
-                  <Col md={1}> </Col>
-                  <Col className='d-grid pods-button-right'>
+                  <Col lg={1}> </Col>
+                  <Col className='pods-button-right d-grid'>
                     <Button size='lg' variant='success' onClick={handleSubmitRound2}>
                       Submit Scores
                     </Button>
