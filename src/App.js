@@ -1,9 +1,5 @@
-import { useState } from 'react';
-import {
-  Menu,
-  Item,
-  useContextMenu,
-} from 'react-contexify';
+import { useState, useEffect } from 'react';
+import { Menu, Item, useContextMenu } from 'react-contexify';
 import 'react-contexify/ReactContexify.css';
 import Accordion from 'react-bootstrap/Accordion';
 import Badge from 'react-bootstrap/Badge';
@@ -114,7 +110,7 @@ function PodTable({ tableNames, round, setScores }) {
   );
 }
 
-function StoreMap({ podNames, round, setPlayerScores }) {
+function StoreMap({ podNames, round, setPlayerScores, tableOrder }) {
   function setProxy(score, playerNum, podNum) {
     setPlayerScores([
       ...podNames.toSpliced(
@@ -141,18 +137,17 @@ function StoreMap({ podNames, round, setPlayerScores }) {
         style={{ textAlign: 'center', cursor: 'default' }}
       />
       <Container>
-        {/* TODO get priority of tables from google sheets */}
         <Row>
           <Col className='column curve-left'>
             <PodTable
-              tableNames={podNames[6]}
+              tableNames={podNames[tableOrder[0]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 6)}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
-              tableNames={podNames[0]}
+              tableNames={podNames[tableOrder[1]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 0)}
             />
@@ -160,14 +155,14 @@ function StoreMap({ podNames, round, setPlayerScores }) {
           <Col lg={1}> </Col>
           <Col className='column curve-left'>
             <PodTable
-              tableNames={podNames[1]}
+              tableNames={podNames[tableOrder[2]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 1)}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
-              tableNames={podNames[4]}
+              tableNames={podNames[tableOrder[3]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 4)}
             />
@@ -177,14 +172,14 @@ function StoreMap({ podNames, round, setPlayerScores }) {
         <Row>
           <Col className='column curve-left'>
             <PodTable
-              tableNames={podNames[7]}
+              tableNames={podNames[tableOrder[4]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 7)}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
-              tableNames={podNames[2]}
+              tableNames={podNames[tableOrder[5]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 2)}
             />
@@ -192,14 +187,14 @@ function StoreMap({ podNames, round, setPlayerScores }) {
           <Col lg={1}> </Col>
           <Col className='column curve-left'>
             <PodTable
-              tableNames={podNames[3]}
+              tableNames={podNames[tableOrder[6]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 3)}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
-              tableNames={podNames[5]}
+              tableNames={podNames[tableOrder[7]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 5)}
             />
@@ -209,14 +204,14 @@ function StoreMap({ podNames, round, setPlayerScores }) {
         <Row>
           <Col className='column curve-left'>
             <PodTable
-              tableNames={podNames[11]}
+              tableNames={podNames[tableOrder[8]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 11)}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
-              tableNames={podNames[8]}
+              tableNames={podNames[tableOrder[9]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 8)}
             />
@@ -224,14 +219,14 @@ function StoreMap({ podNames, round, setPlayerScores }) {
           <Col lg={1}> </Col>
           <Col className='column curve-left'>
             <PodTable
-              tableNames={podNames[9]}
+              tableNames={podNames[tableOrder[10]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 9)}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
-              tableNames={podNames[10]}
+              tableNames={podNames[tableOrder[11]]}
               round={round}
               setScores={(score, playerNum) => setProxy(score, playerNum, 10)}
             />
@@ -419,23 +414,22 @@ function AccessibilityPanel({
   setAccess,
   switchStates,
   setSwitchStates,
+  tables
 }) {
-  // seating order: 6 0   1 4
-  //                7 2   3 5
-  //               11 8   9 10
+  // seating order: 0 1   2 3
+  //                4 5   6 7
+  //                8 9  10 11
 
-  // TODO get priority of tables from google sheets
-
-  const aisle = [0, 1, 2, 3, 8, 9];
-  const wall = [4, 5, 6, 7, 10, 11];
-  const front = [8, 9, 10, 11];
-  const middle = [2, 3, 5, 7];
-  const back = [0, 1, 4, 6];
-  const frontTwoThirds = [2, 3, 5, 7, 8, 9, 10, 11];
-  const backTwoThirds = [0, 1, 2, 3, 4, 5, 6, 7];
-  const excludeMiddle = [0, 1, 4, 6, 8, 9, 10, 11];
-  const left = [0, 2, 6, 7, 8, 11];
-  const right = [1, 3, 4, 5, 9, 10];
+  const aisle = [tables[1], tables[2], tables[5], tables[6], tables[9], tables[10]].toSorted();
+  const wall = [tables[0], tables[3], tables[4], tables[7], tables[8], tables[11]].toSorted();
+  const front = [tables[8], tables[9], tables[10], tables[11]].toSorted();
+  const middle = [tables[4], tables[5], tables[6], tables[7]].toSorted();
+  const back = [tables[0], tables[1], tables[2], tables[3]].toSorted();
+  const frontTwoThirds = [tables[8], tables[9], tables[10], tables[11], tables[4], tables[5], tables[6], tables[7]].toSorted();
+  const backTwoThirds = [tables[4], tables[5], tables[6], tables[7],tables[0], tables[1], tables[2], tables[3]].toSorted();
+  const excludeMiddle = [tables[0], tables[1], tables[2], tables[3], tables[8], tables[9], tables[10], tables[11]].toSorted();
+  const left = [tables[0], tables[1], tables[4], tables[5], tables[8], tables[9]].toSorted();
+  const right = [tables[2], tables[3], tables[6], tables[7], tables[10], tables[11]].toSorted();
 
   function handleSubmit(e, name) {
     e.preventDefault();
@@ -467,14 +461,8 @@ function AccessibilityPanel({
           restrictions[i].includes(item)
         );
       }
-      if (validTables.length == 0) {
-        alert(
-          'Error: You have selected two or more incompatible requirements (e.g. "Left Side" and "Right Side")'
-        );
-      } else {
-        setAccess(access.toSpliced(e.target.id, 1, [name, validTables]));
+      setAccess(access.toSpliced(e.target.id, 1, [name, validTables]));
       }
-    }
   }
 
   // TODO remove from sheet
@@ -492,7 +480,6 @@ function AccessibilityPanel({
               <Form id={i} onSubmit={(e) => handleSubmit(e, item[0])}>
                 <Row>
                   <Col>
-                  {/* TODO make switches into radios: use second spliced to change whole group, e.g. below  */}
                     <Row>
                       <label>
                         <Form.Switch
@@ -506,7 +493,8 @@ function AccessibilityPanel({
                                 switchStates[i].toSpliced(
                                   0,
                                   2,
-                                  !switchStates[i][0], false
+                                  !switchStates[i][0],
+                                  false
                                 )
                               )
                             )
@@ -529,7 +517,8 @@ function AccessibilityPanel({
                                 switchStates[i].toSpliced(
                                   0,
                                   2,
-                                  false, !switchStates[i][1]
+                                  false,
+                                  !switchStates[i][1]
                                 )
                               )
                             )
@@ -552,8 +541,8 @@ function AccessibilityPanel({
                                 1,
                                 switchStates[i].toSpliced(
                                   2,
-                                  1,
-                                  !switchStates[i][2]
+                                  6,
+                                  !switchStates[i][2], false, false, false, false, false
                                 )
                               )
                             )
@@ -574,9 +563,9 @@ function AccessibilityPanel({
                                 i,
                                 1,
                                 switchStates[i].toSpliced(
-                                  3,
-                                  1,
-                                  !switchStates[i][3]
+                                  2,
+                                  6,
+                                  false, !switchStates[i][3], false, false, false, false
                                 )
                               )
                             )
@@ -597,9 +586,9 @@ function AccessibilityPanel({
                                 i,
                                 1,
                                 switchStates[i].toSpliced(
-                                  4,
-                                  1,
-                                  !switchStates[i][4]
+                                  2,
+                                  6,
+                                  false, false, !switchStates[i][4], false, false, false
                                 )
                               )
                             )
@@ -620,9 +609,9 @@ function AccessibilityPanel({
                                 i,
                                 1,
                                 switchStates[i].toSpliced(
-                                  5,
-                                  1,
-                                  !switchStates[i][5]
+                                  2,
+                                  6,
+                                  false, false, false, !switchStates[i][5], false, false
                                 )
                               )
                             )
@@ -643,9 +632,9 @@ function AccessibilityPanel({
                                 i,
                                 1,
                                 switchStates[i].toSpliced(
+                                  2,
                                   6,
-                                  1,
-                                  !switchStates[i][6]
+                                  false, false, false, false, !switchStates[i][6], false
                                 )
                               )
                             )
@@ -666,9 +655,9 @@ function AccessibilityPanel({
                                 i,
                                 1,
                                 switchStates[i].toSpliced(
-                                  7,
-                                  1,
-                                  !switchStates[i][7]
+                                  2,
+                                  6,
+                                  false, false, false, false, false, !switchStates[i][7]
                                 )
                               )
                             )
@@ -691,8 +680,8 @@ function AccessibilityPanel({
                                 1,
                                 switchStates[i].toSpliced(
                                   8,
-                                  1,
-                                  !switchStates[i][8]
+                                  2,
+                                  !switchStates[i][8], false
                                 )
                               )
                             )
@@ -713,9 +702,9 @@ function AccessibilityPanel({
                                 i,
                                 1,
                                 switchStates[i].toSpliced(
-                                  9,
-                                  1,
-                                  !switchStates[i][9]
+                                  8,
+                                  2,
+                                  false, !switchStates[i][9]
                                 )
                               )
                             )
@@ -765,7 +754,6 @@ function AccessibilityPanel({
 }
 
 function App() {
-  // TODO add spreadsheet integration (??) [names from google sheets]
   const [playerNames, setPlayerNames] = useState(
     [
       'Ezra P',
@@ -806,15 +794,27 @@ function App() {
       'Leo A',
       'James C',
       'Adam J',
-      'Sam C'
+      'Sam C',
     ].sort()
   );
   const [judgeNames, setJudgeNames] = useState(['Cat R', 'Ezra P', 'Lilith L']);
-  // TODO get priority of tables from google sheets
-  // TODO get access from sheets
   const [access, setAccess] = useState([
     ['Head Judge', [0]],
     ['Liam M', [0, 1, 2, 3, 8, 9]],
+  ]);
+  const [tableOrder, setTableOrder] = useState([
+    6,
+    0,
+    1,
+    4,
+    7,
+    2,
+    3,
+    5,
+    11,
+    8,
+    9,
+    10,
   ]);
   const [bulkInput, setBulkInput] = useState(false);
   const [key, setKey] = useState('first');
@@ -833,18 +833,29 @@ function App() {
     access.map((item) => parseArray(item[1]))
   );
 
+  useEffect(() => {
+    fetch(
+      'https://script.google.com/macros/s/AKfycbyngUNwL4f7r55fWTcubOwnnS-GWvIxnLHvSW2sDBePD9Rg0QjBbSrb-9QC7gk1TmlQWg/exec'
+    )
+      .then((r) => r.json())
+      .then((r) => {
+        setPlayerNames(r.names);
+        setAccess(r.access);
+        setTableOrder(r.tables);
+      });
+  }, []);
+
   function parseArray(array) {
-    // TODO get priority of tables from google sheets
-    const aisle = [0, 1, 2, 3, 8, 9];
-    const wall = [4, 5, 6, 7, 10, 11];
-    const front = [8, 9, 10, 11];
-    const middle = [2, 3, 5, 7];
-    const back = [0, 1, 4, 6];
-    const frontTwoThirds = [2, 3, 5, 7, 8, 9, 10, 11];
-    const backTwoThirds = [0, 1, 2, 3, 4, 5, 6, 7];
-    const excludeMiddle = [0, 1, 4, 6, 8, 9, 10, 11];
-    const left = [0, 2, 6, 7, 8, 11];
-    const right = [1, 3, 4, 5, 9, 10];
+    const aisle = [tableOrder[1], tableOrder[2], tableOrder[5], tableOrder[6], tableOrder[9], tableOrder[10]].toSorted();
+    const wall = [tableOrder[0], tableOrder[3], tableOrder[4], tableOrder[7], tableOrder[8], tableOrder[11]].toSorted();
+    const front = [tableOrder[8], tableOrder[9], tableOrder[10], tableOrder[11]].toSorted();
+    const middle = [tableOrder[4], tableOrder[5], tableOrder[6], tableOrder[7]].toSorted();
+    const back = [tableOrder[0], tableOrder[1], tableOrder[2], tableOrder[3]].toSorted();
+    const frontTwoThirds = [tableOrder[8], tableOrder[9], tableOrder[10], tableOrder[11], tableOrder[4], tableOrder[5], tableOrder[6], tableOrder[7]].toSorted();
+    const backTwoThirds = [tableOrder[4], tableOrder[5], tableOrder[6], tableOrder[7],tableOrder[0], tableOrder[1], tableOrder[2], tableOrder[3]].toSorted();
+    const excludeMiddle = [tableOrder[0], tableOrder[1], tableOrder[2], tableOrder[3], tableOrder[8], tableOrder[9], tableOrder[10], tableOrder[11]].toSorted();
+    const left = [tableOrder[0], tableOrder[1], tableOrder[4], tableOrder[5], tableOrder[8], tableOrder[9]].toSorted();
+    const right = [tableOrder[2], tableOrder[3], tableOrder[6], tableOrder[7], tableOrder[10], tableOrder[11]].toSorted();
 
     let output = [
       false,
@@ -1249,6 +1260,7 @@ function App() {
                   podNames={round1Players}
                   round={1}
                   setPlayerScores={setRound1Players}
+                  tableOrder={tableOrder}
                 />
                 <br />
                 <Row>
@@ -1282,6 +1294,7 @@ function App() {
                   podNames={round2Players}
                   round={2}
                   setPlayerScores={setRound2Players}
+                  tableOrder={tableOrder}
                 />
                 <br />
                 <Row>
@@ -1317,6 +1330,7 @@ function App() {
                 setAccess={setAccess}
                 switchStates={switchStates}
                 setSwitchStates={setSwitchStates}
+                tables={tableOrder}
               />
             </Tab.Pane>
           </Tab.Content>
