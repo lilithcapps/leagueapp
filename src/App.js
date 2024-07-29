@@ -506,7 +506,7 @@ function AccessibilityPanel({
                                 switchStates[i].toSpliced(
                                   0,
                                   2,
-                                  [!switchStates[i][0], false]
+                                  !switchStates[i][0], false
                                 )
                               )
                             )
@@ -529,7 +529,7 @@ function AccessibilityPanel({
                                 switchStates[i].toSpliced(
                                   0,
                                   2,
-                                  [false, !switchStates[i][1]]
+                                  false, !switchStates[i][1]
                                 )
                               )
                             )
