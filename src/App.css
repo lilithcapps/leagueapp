@@ -25,6 +25,12 @@
   .player-name {
     height: 50px;
   }
+}
+
+@media (min-width:992px) {
+  .player-name {
+    height: 100px;
+  }
 
   .pods-button-left {
     padding-right: 0px;
@@ -32,12 +38,6 @@
 
   .pods-button-right {
     padding-left: 0px;
-  }
-}
-
-@media (min-width:992px) {
-  .player-name {
-    height: 100px;
   }
 }
 
