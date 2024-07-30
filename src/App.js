@@ -252,14 +252,14 @@ function PlayerNames({
   }
 
   function handleClick(e) {
-    setJudgeNames([...judgeNames, e.triggerEvent.originalTarget.outerText]);
+    setJudgeNames([...judgeNames, e.triggerEvent.target.textContent]);
   }
 
   function handleClickJudge(e) {
     e.preventDefault();
     setJudgeNames([
       e.target.outerText,
-      ...judgeNames.filter((item) => item !== e.target.outerText),
+      ...judgeNames.filter((item) => item !== e.target.textContent),
     ]);
   }
 
@@ -348,19 +348,15 @@ function PlayerNames({
         <Item
           id='access'
           onClick={(e) => {
-            setAccess(e.triggerEvent.originalTarget.outerText);
-            setSwitch();
-            setPage();
-          }}
-          onTouchStart={(e) => {
-            setAccess(e.triggerEvent.originalTarget.outerText);
+            console.log(e);
+            setAccess(e.triggerEvent.target.textContent);
             setSwitch();
             setPage();
           }}
         >
           Set accessibility needs
         </Item>
-        <Item id='judge' onClick={handleClick} onTouchStart={handleClick}>
+        <Item id='judge' onClick={handleClick} >
           Set as judge
         </Item>
       </Menu>
@@ -960,6 +956,7 @@ function App() {
         }
       });
     let tempArray2 = structuredClone(tempArray);
+    try {
     for (let i = 0; i < tempArray2.length; i++) {
       if (tempArray2[i].length === 4) {
         tempArray2[i] = [
@@ -1008,6 +1005,9 @@ function App() {
           return a[0][1] > b[0][1] ? -1 : 1;
         }
       });
+    } } catch {
+      alert("Error: Not enough players to avoid rematches")
+      return(shuffle(tempArray))
     }
     return accessNeeds(tempArray2);
   }
