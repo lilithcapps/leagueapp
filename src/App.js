@@ -18,7 +18,7 @@ import './App.css';
 
 function PodTable({ tableNames, round, setScores }) {
   function handleChange(e, num) {
-    setScores(parseInt(e.target.value), num);
+    setScores(parseFloat(e.target.value), num);
   }
 
   if (tableNames != null && tableNames[0][0] != null) {
