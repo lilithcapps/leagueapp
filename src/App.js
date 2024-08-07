@@ -1257,7 +1257,10 @@ function App() {
               />
               <br />
               <Container>
-                <Button variant='danger' onClick={() => setPlayerNames([])}>
+                <Button variant='danger' onClick={() => {
+                  setPlayerNames([]);
+                  setPlayerScores([]);
+                  }}>
                   Clear Names
                 </Button>
               </Container>
