@@ -18,7 +18,7 @@ import './App.css';
 
 function PodTable({ tableNames, round, setScores }) {
   function handleChange(e, num) {
-    setScores(parseInt(e.target.value), num);
+    setScores(parseFloat(e.target.value), num);
   }
 
   if (tableNames != null && tableNames[0][0] != null) {
@@ -142,14 +142,14 @@ function StoreMap({ podNames, round, setPlayerScores, tableOrder }) {
             <PodTable
               tableNames={podNames[tableOrder[0]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 6)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[0])}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
               tableNames={podNames[tableOrder[1]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 0)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[1])}
             />
           </Col>
           <Col lg={1}> </Col>
@@ -157,14 +157,14 @@ function StoreMap({ podNames, round, setPlayerScores, tableOrder }) {
             <PodTable
               tableNames={podNames[tableOrder[2]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 1)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[2])}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
               tableNames={podNames[tableOrder[3]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 4)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[3])}
             />
           </Col>
         </Row>
@@ -174,14 +174,14 @@ function StoreMap({ podNames, round, setPlayerScores, tableOrder }) {
             <PodTable
               tableNames={podNames[tableOrder[4]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 7)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[4])}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
               tableNames={podNames[tableOrder[5]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 2)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[5])}
             />
           </Col>
           <Col lg={1}> </Col>
@@ -189,14 +189,14 @@ function StoreMap({ podNames, round, setPlayerScores, tableOrder }) {
             <PodTable
               tableNames={podNames[tableOrder[6]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 3)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[6])}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
               tableNames={podNames[tableOrder[7]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 5)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[7])}
             />
           </Col>
         </Row>
@@ -206,14 +206,14 @@ function StoreMap({ podNames, round, setPlayerScores, tableOrder }) {
             <PodTable
               tableNames={podNames[tableOrder[8]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 11)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[8])}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
               tableNames={podNames[tableOrder[9]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 8)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[9])}
             />
           </Col>
           <Col lg={1}> </Col>
@@ -221,14 +221,14 @@ function StoreMap({ podNames, round, setPlayerScores, tableOrder }) {
             <PodTable
               tableNames={podNames[tableOrder[10]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 9)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[10])}
             />
           </Col>
           <Col className='column curve-right'>
             <PodTable
               tableNames={podNames[tableOrder[11]]}
               round={round}
-              setScores={(score, playerNum) => setProxy(score, playerNum, 10)}
+              setScores={(score, playerNum) => setProxy(score, playerNum, tableOrder[11])}
             />
           </Col>
         </Row>
