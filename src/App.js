@@ -237,6 +237,52 @@ function StoreMap({ podNames, round, setPlayerScores, tableOrder }) {
   );
 }
 
+function DropPlayers({
+  names,
+  handleDrop,
+  setPage,
+}) {
+
+  const cols = 4;
+  const itemsPerCol = Math.floor(names.length / cols) + 1;
+  const itemsSplits = names
+    .map((elmt, idx, arr) =>
+      !(idx % itemsPerCol) ? arr.slice(idx, idx + itemsPerCol) : ''
+    )
+    .filter((item) => item !== '');
+
+  const finalCols = [
+    itemsSplits.map((split, i) => {
+      return (
+        <Col sm={12 / cols} key={i}>
+          <ListGroup key={i}>
+            {split.map((entry, j) => {
+              return (
+                <ListGroupItem
+                  action
+                  key={j}
+                  onClick={() => handleDrop(itemsPerCol*i+j)}
+                >
+                  <Form.Switch tabIndex={-1} checked={entry[3]} inline />
+                  {entry[0]}
+                </ListGroupItem>
+              );
+            })}
+          </ListGroup>
+        </Col>
+      );
+    }),
+  ];
+
+  return (
+    <Container>
+      <Row>
+        {finalCols}
+      </Row>
+    </Container>
+  );
+}
+
 function PlayerNames({
   names,
   handleDelete,
@@ -276,7 +322,7 @@ function PlayerNames({
     });
   }
 
-  const playerNames = names.filter((item) => !judgeNames.includes(item));
+  const playerNames = names.filter((item) => !judgeNames.includes(item[0])).map((item) => item[0]);
 
   const cols = 3;
   const itemsPerCol = Math.floor(playerNames.length / cols) + 1; //3 columns pls
@@ -324,7 +370,7 @@ function PlayerNames({
           </div>
           <ListGroup>
             {judgeNames
-              .filter((item) => names.includes(item))
+              .filter((item) => names.map(item => item[0]).includes(item))
               .map((name, i) => {
                 return (
                   <ListGroupItem
@@ -364,6 +410,8 @@ function PlayerNames({
   );
 }
 
+// FIXME fix bug where players show the wrong score
+// [ ] allow scores to be exported
 function PlayerScores({ scoresArray }) {
   const sortedScoresArray = scoresArray
     .map((item) => {
@@ -443,7 +491,7 @@ function AccessibilityPanel({
       e.target.right.checked ? right : null,
     ].filter((item) => item !== null);
 
-    // TODO add to sheet
+    // [ ] add to sheet
     if (restrictions.length === 1) {
       setAccess(access.toSpliced(e.target.id, 1, [name, restrictions[0]]));
     } else if (restrictions.length === 0) {
@@ -461,7 +509,7 @@ function AccessibilityPanel({
       }
   }
 
-  // TODO remove from sheet
+  // [ ] remove from sheet
   function handleDelete(name) {
     setAccess(access.filter((item) => item[0] !== name));
   }
@@ -750,7 +798,7 @@ function AccessibilityPanel({
 }
 
 function App() {
-  const [playerNames, setPlayerNames] = useState(
+  const [playerScores, setPlayerScores] = useState(
     [
       'Ezra P',
       'Aidan C',
@@ -791,7 +839,7 @@ function App() {
       'James C',
       'Adam J',
       'Sam C',
-    ].sort()
+    ].sort().map((name) => [name, 0, 0, true]) // [name, round 1, round 2, playingOn? ]
   );
   const [judgeNames, setJudgeNames] = useState(['Cat R', 'Ezra P', 'Lilith L']);
   const [access, setAccess] = useState([
@@ -813,11 +861,8 @@ function App() {
     10,
   ]);
   const [bulkInput, setBulkInput] = useState(false);
-  const [key, setKey] = useState('first');
+  const [key, setKey] = useState('names');
   const [autoGenRound1, setAutoGenRound1] = useState(true);
-  const [playerScores, setPlayerScores] = useState(
-    playerNames.map((name) => [name, 0, 0])
-  );
   const [round1Players, setRound1Players] = useState(
     shuffle(playerScores.slice())
   );
@@ -830,16 +875,18 @@ function App() {
   );
 
   useEffect(() => {
+    // [ ] setup fetch check
+    // [ ] set up auto export on change
+    // [ ] refactor player scores to be useful ??
     fetch(
       'https://script.google.com/macros/s/AKfycbyngUNwL4f7r55fWTcubOwnnS-GWvIxnLHvSW2sDBePD9Rg0QjBbSrb-9QC7gk1TmlQWg/exec'
     )
       .then((r) => r.json())
       .then((r) => {
         console.log(r)
-        setPlayerNames(r.names);
         setAccess(r.access);
         setTableOrder(r.tables);
-        const scores = r.names.map((name) => [name, 0, 0])
+        const scores = r.names.sort().map((name) => [name, 0, 0, true])
         setPlayerScores(scores);
         setRound1Players(shuffle(scores))
         setRound2Players(shuffle(scores))
@@ -1056,7 +1103,7 @@ function App() {
           } else if (item[1].includes(originalSeat)) {
             usedSeats.push(originalSeat);
           }
-        } // TODO fix alerts so it fires consistently and at the right time
+        } // [ ] fix alerts so it fires consistently and at the right time
         // else if (!alerted && idx+1 === arr.length) {
         //   alerted = true
         //   alert("1 or more players could not be seated at a preferred table.\nPlease ensure that all pods are acceptable")
@@ -1092,14 +1139,12 @@ function App() {
         .replaceAll(',', '\n')
         .split('\n')
         .filter((item) => item !== '');
-      setPlayerNames([...namesArr, ...playerNames]);
       setPlayerScores([
-        ...namesArr.map((name) => [name, 0, 0]),
+        ...namesArr.map((name) => [name, 0, 0, true]),
         ...playerScores,
       ]);
     } else if (name !== '') {
-      setPlayerNames([name, ...playerNames]);
-      setPlayerScores([[name, 0, 0], ...playerScores]);
+      setPlayerScores([[name, 0, 0, true], ...playerScores]);
     }
     setAutoGenRound1(true);
 
@@ -1108,10 +1153,8 @@ function App() {
 
   function handleDeletePlayer(e, name) {
     e.preventDefault();
-    const newNames = playerNames.filter((item) => item !== name);
     const newScores = playerScores.filter((item) => item[0] !== name);
 
-    setPlayerNames([...newNames]);
     setPlayerScores([...newScores]);
     setAutoGenRound1(true);
   }
@@ -1142,27 +1185,27 @@ function App() {
       activeKey={key}
       onSelect={(k) => {
         switch (k) {
-          case 'second':
+          case 'round1':
             autoGenRound1 &&
               (setAutoGenRound1(false) ||
                 setRound1Players(shuffle(playerScores.slice())));
             break;
-          case 'third':
+          case 'round2':
             setRound2Players(generateRound2Pods());
             break;
-          case 'fourth':
+          case 'finalScores':
             console.log(round1Players)
             const round1PlayersFlat = round1Players
               .flat()
-              .filter((item) => playerNames.includes(item[0]))
+              .filter((item) => playerScores.map(item => item[0]).includes(item[0]))
               .sort();
             console.log(round2Players)
             const round2PlayersFlat = round2Players
               .flat()
-              .filter((item) => playerNames.includes(item[0]))
+              .filter((item) => playerScores.map(item => item[0]).includes(item[0]))
               .sort();
             setPlayerScores(
-              playerNames.map((ele, idx) => [
+              playerScores.map((ele, idx) => [
                 ele,
                 round1PlayersFlat[idx][1],
                 round2PlayersFlat[idx][2],
@@ -1179,22 +1222,25 @@ function App() {
         <Col sm={1}>
           <Nav justify variant='underline' className='flex-column'>
             <Nav.Item>
-              <Nav.Link eventKey='first'>Players</Nav.Link>
+              <Nav.Link eventKey='names'>Players</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey='second'>Round 1</Nav.Link>
+              <Nav.Link eventKey='round1'>Round 1</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey='third'>Round 2</Nav.Link>
+              <Nav.Link eventKey='dropPlayers'>Drop Players</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey='fourth'>Final Scores</Nav.Link>
+              <Nav.Link eventKey='round2'>Round 2</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link eventKey='finalScores'>Final Scores</Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>
         <Col sm={11}>
           <Tab.Content>
-            <Tab.Pane eventKey='first'>
+            <Tab.Pane eventKey='names'>
               <Container>
                 <Form name='playerForm' onSubmit={handleSubmitPlayer}>
                   <InputGroup>
@@ -1227,7 +1273,7 @@ function App() {
               </Container>
               <br />
               <PlayerNames
-                names={playerNames}
+                names={playerScores}
                 handleDelete={handleDeletePlayer}
                 judgeNames={judgeNames}
                 setJudgeNames={setJudgeNames}
@@ -1265,7 +1311,7 @@ function App() {
                 </Button>
               </Container>
             </Tab.Pane>
-            <Tab.Pane eventKey='second'>
+            <Tab.Pane eventKey='round1'>
               <Container>
                 <StoreMap
                   podNames={round1Players}
@@ -1299,7 +1345,15 @@ function App() {
                 </Row>
               </Container>
             </Tab.Pane>
-            <Tab.Pane eventKey='third'>
+            {/* // TODO add ability to drop players between rounds; Use similar method to shuffle thirds instead of assigning pods to pods */}
+            <Tab.Pane eventKey='dropPlayers'>
+              <DropPlayers
+                names={playerScores}
+                handleDrop={(idx) => setPlayerScores(playerScores.toSpliced(idx, 1, [playerScores[idx][0], playerScores[idx][1], playerScores[idx][2], !playerScores[idx][3]]))}
+                setPage={() => setKey('accessibility')}
+              />
+            </Tab.Pane>
+            <Tab.Pane eventKey='round2'>
               <Container>
                 <StoreMap
                   podNames={round2Players}
@@ -1331,7 +1385,7 @@ function App() {
                 </Row>
               </Container>
             </Tab.Pane>
-            <Tab.Pane eventKey='fourth'>
+            <Tab.Pane eventKey='finalScores'>
               {/* TODO add export to google sheets (something in that vein) */}
               <PlayerScores scoresArray={playerScores} />
             </Tab.Pane>
