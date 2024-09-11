@@ -1503,7 +1503,7 @@ function App() {
                     {
                       ...players.filter((player) => player.name === name)[0],
                       judge: false,
-                      headJudge : false
+                      headJudge: false,
                     },
                     ...players.filter(
                       (player) => player.name !== name && !player.judge
@@ -1530,7 +1530,7 @@ function App() {
                   var idx = players.findIndex((ele) => ele.name == name);
                   players.splice(idx, 1, {
                     ...players[idx],
-                    accessibility: [],
+                    accessibility: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                   });
                 }}
                 setSwitch={() =>
